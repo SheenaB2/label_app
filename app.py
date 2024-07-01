@@ -183,27 +183,17 @@ def index():
 @app.route('/submit_result', methods=['POST'])
 @login_required
 def submit_result():
-    # video_id = request.form['video_id']
-    video_id = request.args.get('video_id')
-    print(video_id)
+    video_id = request.form['video_id']
     result = request.form['result'] == 'yes'
     
     # Save the result to the database
+    print(current_user.id,video_id,result)
     new_result = Label(user_id=current_user.id, video_id=video_id, label=result)
     db.session.add(new_result)
     db.session.commit()
     
-    # # Determine the next video index
-    # current_video_index = int(request.form['current_video_index']) + 1
-    
-    # labeled_videos = Label.query.filter_by(user_id=current_user.id).all()
-    # labeled_video_ids = [label.video_id for label in labeled_videos]
-    # videos = Video.query.filter(~Video.id.in_(labeled_video_ids)).order_by(func.random()).all()
-    
-    # if current_video_index < len(videos):
-    #     return render_template('index.html', videos=videos, current_video_index=current_video_index)
-    # else:
-    #     return "All videos reviewed"
+    return "videos viewed"
+   
 
 
 if __name__ == "__main__":
