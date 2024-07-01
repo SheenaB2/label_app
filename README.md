@@ -8,8 +8,7 @@ Prerequisites
 - SQLite
   
 Installation
-- `git clone https://github.com/SheenaB2/label-app.git`
-- `cd walking-tour-labeling`
+- `git clone https://github.com/SheenaB2/label-app`
   
 Create and activate a virtual environment:
 - `python3 -m venv venv`
@@ -19,4 +18,4 @@ Initialize database:
 - `python init.py`
 
 Run application:
-- ` python app.py`
+- `python app.py`
