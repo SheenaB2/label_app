@@ -1,0 +1,27 @@
+ <!DOCTYPE html>
+ <html>
+ <head>
+     <title>Video Feed</title>
+ </head>
+ <body>
+     <h1>Video Feed with Bounding Boxes</h1>
+     {% for video in videos %}
+        <div class="video-container {% if loop.first %}active{% endif %}"></div>
+        <img src="{{ url_for('video_feed', video_path= '/home/xb5/label_app/static/' + video.videoname + '.mp4', file_path= '/home/xb5/label_app/static/' + video.videoname + '.txt', target_1 = video.human1, target_2 = video.human2) }}" width="480" height="320">
+        </div>
+        <form action="{{ url_for('submit_result') }}" method="post">
+            <input type="hidden" name="video_id" value= "{{ video.id }}" >
+            <p>Does the labeled people belong to the same group?</p>
+            <button type="submit" name="result" value="yes">Yes</button>
+            <button type="submit" name="result" value="no">No</button>
+        </form>
+    {% else %}
+        <p>No videos available for review.</p>
+     {% endfor %}
+     
+ </body>
+ </html>
+
+ 
+
+ 

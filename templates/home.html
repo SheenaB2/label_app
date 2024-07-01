@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome, {{ current_user.username }}!</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('index') }}">Ready to label 10 videos? Click here to begin!</a>
+</body>
+</html>
