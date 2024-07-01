@@ -177,8 +177,9 @@ def video_feed():
 def index():
     labeled_videos = Label.query.filter_by(user_id=current_user.id).all()
     labeled_video_ids = [label.video_id for label in labeled_videos]
-    videos = Video.query.filter(~Video.id.in_(labeled_video_ids)).order_by(func.random()).limit(10).all()
-    return render_template('index.html', videos=videos)
+    videos = Video.query.filter(~Video.id.in_(labeled_video_ids)).order_by(func.random()).all()
+    current_video_index = request.args.get('current_video_index', default=0, type=int)
+    return render_template('index.html', videos=videos, current_video_index=current_video_index)
 
 @app.route('/submit_result', methods=['POST'])
 @login_required
@@ -187,14 +188,17 @@ def submit_result():
     result = request.form['result'] == 'yes'
     
     # Save the result to the database
-    print(current_user.id,video_id,result)
     new_result = Label(user_id=current_user.id, video_id=video_id, label=result)
     db.session.add(new_result)
     db.session.commit()
     
-    return "videos viewed"
-   
-
+    # Determine the next video index
+    current_video_index = int(request.form['current_video_index']) + 1
+        
+    if current_video_index < 10:
+        return redirect(url_for('index', current_video_index=current_video_index))
+    else:
+        return render_template('finish.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
