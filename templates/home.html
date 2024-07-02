@@ -7,6 +7,13 @@
 <body>
     <h1>Welcome, {{ current_user.username }}!</h1>
     <a href="{{ url_for('logout') }}">Logout</a>
+    <p> Each task in this survey will require you to watch one 5-second video clip. Two people will be identified with boxes around them. Your task is to identify whether those two people are random strangers, or know each other in terms of some social relationships – for example, friends, partners, parent/child, etc. are in social groups. Two people who are not strangers may be friends, partners, parent/child, shop owner/customer, etc. Two people who are part of a bigger group of related
+        Please take a look at the examples below of positive and negative
+        You will be shown a single 5-second video gifs, which (how many times can they replay?). Below are the examples of positive and negative samples.
+        (positive samples)
+        (negative samples)
+        Please take into account ~.
+        You can use any visual cues (explain) </p>
     <a href="{{ url_for('index') }}">Ready to label 10 videos? Click here to begin!</a>
 </body>
 </html>
