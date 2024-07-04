@@ -2,19 +2,34 @@
 <html>
 <head>
     <title>Video Review</title>
+    <style>
+        .red-square {
+            position: absolute;
+            border: 4px solid red; /* Thick border */
+            box-sizing: border-box; /* Include border in the element's dimensions */
+            pointer-events: none; /* Allow clicks through the div */
+        }
+        .video-container {
+            position: relative;
+            display: inline-block;
+            width: 1920px; /* Updated width */
+            height: 1080px; /* Updated height */
+        }
+    </style>
 </head>
 <body>
     <h1>Video Feed with Bounding Boxes</h1>
 
-    {% if videos %}
-        <p>Reviewing video {{ current_video_index + 1 }} of 10</p>
-        <p>Imagine that bounding boxes are drawn. Not appear in video to avoid storing too many videos in home directory</p>
-        <video id="video" width="480" height="320" controls>
-            <source src="{{ url_for('static', filename= videos[current_video_index].videoname +'.mp4') }}" type="video/mp4">
-        </video>
+    {% if video %}
+        <p>Reviewing video</p>
+        <div class="video-container" id="video-container">
+            <video id="video" width="1920" height="1080" controls>
+                <source src="{{ url_for('static', filename=video.videoname + '.mp4') }}" type="video/mp4">
+            </video>
+            <div id="redSquare" class="red-square"></div>
+        </div>
         <form action="{{ url_for('submit_result') }}" method="post">
-            <input type="hidden" name="video_id" value="{{ videos[current_video_index].id }}">
-            <input type="hidden" name="current_video_index" value="{{ current_video_index }}">
+            <input type="hidden" name="video_id" value="{{ video.id }}">
             <p>Do the labeled people belong to the same group?</p>
             <button type="submit" name="result" value="yes">Yes</button>
             <button type="submit" name="result" value="no">No</button>
@@ -22,7 +37,70 @@
     {% else %}
         <p>No videos available for review.</p>
     {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var video = document.getElementById('video');
+            var redSquare = document.getElementById('redSquare');
+            var boundingBoxes = [];
+            var currentIndex = 0;
+            var intervalId;
+
+            function loadBoundingBoxes() {
+                fetch('{{ url_for("static", filename="Buenos_Aires_9.txt") }}')
+                    .then(response => response.text())
+                    .then(data => {
+                        var lines = data.trim().split('\n');
+                        lines.forEach(line => {
+                            var parts = line.split(',');
+                            boundingBoxes.push({
+                                x: parseFloat(parts[2]),
+                                y: parseFloat(parts[3]),
+                                width: parseFloat(parts[4]),
+                                height: parseFloat(parts[5])
+                            });
+                        });
+                    });
+            }
+
+            function adjustBoundingBox() {
+                if (boundingBoxes.length === 0) return;
+
+                var box = boundingBoxes[currentIndex];
+                var videoRect = video.getBoundingClientRect();
+                redSquare.style.top = videoRect.top + window.scrollY + box.y * (videoRect.height / 1080) + 'px';
+                redSquare.style.left = videoRect.left + window.scrollX + box.x * (videoRect.width / 1920) + 'px';
+                redSquare.style.width = box.width * (videoRect.width / 1920) + 'px';
+                redSquare.style.height = box.height * (videoRect.height / 1080) + 'px';
+
+                currentIndex = (currentIndex + 1) % boundingBoxes.length;
+            }
+
+            function startUpdatingBoundingBox() {
+                intervalId = setInterval(adjustBoundingBox, 500);
+            }
+
+            function stopUpdatingBoundingBox() {
+                clearInterval(intervalId);
+            }
+
+            loadBoundingBoxes();
+
+            video.addEventListener('play', startUpdatingBoundingBox);
+            video.addEventListener('pause', stopUpdatingBoundingBox);
+
+            // Adjust bounding box initially
+            adjustBoundingBox();
+
+            // Adjust bounding box on fullscreen change
+            document.addEventListener('fullscreenchange', adjustBoundingBox);
+            document.addEventListener('webkitfullscreenchange', adjustBoundingBox);
+            document.addEventListener('mozfullscreenchange', adjustBoundingBox);
+            document.addEventListener('msfullscreenchange', adjustBoundingBox);
+
+            // Adjust bounding box on window resize
+            window.addEventListener('resize', adjustBoundingBox);
+        });
+    </script>
 </body>
 </html>
-
- 
