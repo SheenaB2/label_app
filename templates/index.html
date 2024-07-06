@@ -8,16 +8,19 @@
 
     {% if videos %}
         <p>Reviewing video {{ current_video_index + 1 }} of 10</p>
-        <p>Imagine that bounding boxes are drawn. Not appear in video to avoid storing too many videos in home directory</p>
-        <video id="video" width="480" height="320" controls>
-            <source src="{{ url_for('static', filename= videos[current_video_index].videoname +'.mp4') }}" type="video/mp4">
+        <video id="video" controls>
+            <source src="{{ url_for('static', filename= 'Amsterdam_0_1_3.mp4') }}" type="video/mp4">
+            <!-- <source src="{{ url_for('static', filename= videos[current_video_index].videoname +'.mp4') }}" type="video/mp4"> -->
         </video>
         <form action="{{ url_for('submit_result') }}" method="post">
             <input type="hidden" name="video_id" value="{{ videos[current_video_index].id }}">
             <input type="hidden" name="current_video_index" value="{{ current_video_index }}">
-            <p>Do the labeled people belong to the same group?</p>
-            <button type="submit" name="result" value="yes">Yes</button>
-            <button type="submit" name="result" value="no">No</button>
+            <p>Are the labeled people strangers?</p>
+            <button type="submit" name="result" value=1>For Sure No</button>
+            <button type="submit" name="result" value=2>Likely no</button>
+            <button type="submit" name="result" value=3>Unsure</button>
+            <button type="submit" name="result" value=4>Likely yes</button>
+            <button type="submit" name="result" value=5>For Sure Yes</button>
         </form>
     {% else %}
         <p>No videos available for review.</p>

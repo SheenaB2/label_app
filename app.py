@@ -185,7 +185,7 @@ def index():
 @login_required
 def submit_result():
     video_id = request.form['video_id']
-    result = request.form['result'] == 'yes'
+    result = request.form['result']
     
     # Save the result to the database
     new_result = Label(user_id=current_user.id, video_id=video_id, label=result)

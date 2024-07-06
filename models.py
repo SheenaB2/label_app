@@ -19,5 +19,5 @@ class Label(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     video_id = db.Column(db.Integer, db.ForeignKey('video.id'), nullable=False)
-    label = db.Column(db.Boolean, nullable=False)  
+    label = db.Column(db.Integer, nullable=False)  
     __table_args__ = (db.UniqueConstraint('user_id', 'video_id', name='unique_user_video'),)
