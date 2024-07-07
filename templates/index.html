@@ -23,7 +23,7 @@
     {% if video %}
         <p>Reviewing video</p>
         <div class="video-container" id="video-container">
-            <video id="video" width="1920" height="1080" controls>
+            <video id="video" width="1280" height="720" controls>
                 <source src="{{ url_for('static', filename=video.videoname + '.mp4') }}" type="video/mp4">
             </video>
             <div id="redSquare" class="red-square"></div>
@@ -38,53 +38,40 @@
         <p>No videos available for review.</p>
     {% endif %}
 
-    <script>
+    <script type="text/javascript">
+        var boxes = {{ box1|tojson }};
+        console.log("boxAHHHH",boxes);
+
         document.addEventListener('DOMContentLoaded', function() {
             var video = document.getElementById('video');
             var redSquare = document.getElementById('redSquare');
-            var boundingBoxes = [];
+            // var box1 = document.getElementById('box1');
+            // console.log("boxAHHHH",box1);
+
             var currentIndex = 0;
             var intervalId;
 
-            function loadBoundingBoxes() {
-                fetch('{{ url_for("static", filename="Buenos_Aires_9.txt") }}')
-                    .then(response => response.text())
-                    .then(data => {
-                        var lines = data.trim().split('\n');
-                        lines.forEach(line => {
-                            var parts = line.split(',');
-                            boundingBoxes.push({
-                                x: parseFloat(parts[2]),
-                                y: parseFloat(parts[3]),
-                                width: parseFloat(parts[4]),
-                                height: parseFloat(parts[5])
-                            });
-                        });
-                    });
-            }
-
             function adjustBoundingBox() {
-                if (boundingBoxes.length === 0) return;
-
-                var box = boundingBoxes[currentIndex];
+                var box = boxes[currentIndex];
+                // console.log("boxA",box);
                 var videoRect = video.getBoundingClientRect();
-                redSquare.style.top = videoRect.top + window.scrollY + box.y * (videoRect.height / 1080) + 'px';
-                redSquare.style.left = videoRect.left + window.scrollX + box.x * (videoRect.width / 1920) + 'px';
-                redSquare.style.width = box.width * (videoRect.width / 1920) + 'px';
-                redSquare.style.height = box.height * (videoRect.height / 1080) + 'px';
+                redSquare.style.top = videoRect.top + window.scrollY + box[1] * (videoRect.height / 720) + 'px';
+                redSquare.style.left = videoRect.left + window.scrollX + box[0] * (videoRect.width / 1280) + 'px';
+                redSquare.style.width = box[2] * (videoRect.width / 1280) + 'px';
+                redSquare.style.height = box[3] * (videoRect.height / 720) + 'px';
+                console.log(redSquare.style.top,redSquare.style.left,redSquare.style.width,redSquare.style.height);
 
-                currentIndex = (currentIndex + 1) % boundingBoxes.length;
+                currentIndex = (currentIndex + 1) % boxes.length;
             }
 
             function startUpdatingBoundingBox() {
-                intervalId = setInterval(adjustBoundingBox, 500);
+                intervalId = setInterval(adjustBoundingBox, 1000/3);
             }
 
             function stopUpdatingBoundingBox() {
                 clearInterval(intervalId);
             }
 
-            loadBoundingBoxes();
 
             video.addEventListener('play', startUpdatingBoundingBox);
             video.addEventListener('pause', stopUpdatingBoundingBox);

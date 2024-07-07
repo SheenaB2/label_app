@@ -68,8 +68,9 @@ def home():
 @login_required
 def index():
     video = Video.query.first()  # Fetch your specific video
-    bounding_box = get_first_bounding_box('static/Buenos_Aires_9.txt')
-    return render_template('index.html', video=video, bounding_box=bounding_box)
+    box1, box2 = get_first_bounding_box(video)
+    print(box1,box2)
+    return render_template('index.html', video=video, box1=box1, box2=box2)
 
 @app.route('/submit_result', methods=['POST'])
 @login_required
@@ -84,17 +85,27 @@ def submit_result():
     
     return redirect(url_for('index'))
 
-def get_first_bounding_box(file_path):
+def get_first_bounding_box(video):
+    file_path = 'static/' + video.videoname + '.txt'
+    human1 = video.human1
+    human2 = video.human2
+    box1 = [[] for i in range(150)] # assume frame rate 30fps
+    box2 = [[] for i in range(150)]
     with open(file_path, mode='r') as file:
         reader = csv.reader(file)
         for row in reader:
-            return {
-                'x': float(row[2]),
-                'y': float(row[3]),
-                'width': float(row[4]),
-                'height': float(row[5])
-            }
-    return None
+            if int(row[1]) == human1:
+
+                box1[int(row[0])] = [float(row[2]),float(row[3]),float(row[4]),float(row[5])]
+            if int(row[1]) == human2:
+                box2[int(row[0])] = [float(row[2]),float(row[3]),float(row[4]),float(row[5])]
+            # return {
+            #     'x': float(row[2]),
+            #     'y': float(row[3]),
+            #     'width': float(row[4]),
+            #     'height': float(row[5])
+            # }
+    return box1, box2
 
 if __name__ == "__main__":
     app.run(debug=True)
