@@ -4,12 +4,12 @@
     <title>Video Review</title>
 </head>
 <body>
-    <h1>Video Feed with Bounding Boxes</h1>
+    <h1>Please Label the Following Video</h1>
 
     {% if videos %}
         <p>Reviewing video {{ current_video_index + 1 }} of 10</p>
         <video id="video" controls>
-            <source src="{{ url_for('static', filename= 'Amsterdam_0_1_3.mp4') }}" type="video/mp4">
+            <source src="{{ url_for('static', filename= videos[current_video_index].videoname + '__'+ videos[current_video_index].human1|string + '_' + videos[current_video_index].human2|string +'.mp4') }}" type="video/mp4">
             <!-- <source src="{{ url_for('static', filename= videos[current_video_index].videoname +'.mp4') }}" type="video/mp4"> -->
         </video>
         <form action="{{ url_for('submit_result') }}" method="post">

@@ -7,14 +7,19 @@
 <body>
     <h1>Welcome, {{ current_user.username }}!</h1>
     <a href="{{ url_for('logout') }}">Logout</a>
-    <p> Each task in this survey will require you to watch one 5-second video clip. Two people will be identified with boxes around them. Your task is to identify whether those two people are random strangers, or know each other in terms of some social relationships – for example, friends, partners, parent/child, etc. are in social groups. Two people who are not strangers may be friends, partners, parent/child, shop owner/customer, etc. Two people who are part of a bigger group of related
-        Please take a look at the examples below of positive and negative
-        You will be shown a single 5-second video. Below are the examples of positive and negative samples.
+    <p> Each task in this survey will require you to watch one 5-second video clip. 
+        Two people will be identified with boxes around them. 
+        Your task is to identify whether those two people are strangers.
+        Below are some examples.
     </p>
     <h1>Strangers</h1>
-    <img src="path/to/your/giffile.gif" alt="Example for Videos labelled strangers">
+    <img src="static/gifs/Stranger_eg1.gif" alt="Example for Videos labelled strangers">
+    <img src="static/gifs/Stranger_eg2.gif" alt="Example for Videos labelled strangers">
+    <img src="static/gifs/Stranger_eg3.gif" alt="Example for Videos labelled strangers">
     <h1>NOT Strangers</h1>
-    <img src="path/to/your/giffile.gif" alt="Example for Videos labelled not strangers">
+    <img src="static/gifs/No_stranger_eg1.gif" alt="Example for Videos labelled not strangers">
+    <img src="static/gifs/No_stranger_eg2.gif" alt="Example for Videos labelled not strangers">
+    <img src="static/gifs/No_stranger_eg3.gif" alt="Example for Videos labelled not strangers">
     <a href="{{ url_for('index') }}">Ready to label 10 videos? Click here to begin!</a>
 </body>
 </html>
