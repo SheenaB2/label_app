@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Video Review</title>
+    <meta charset="UTF-8">
+    <title>Label Video</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_home.css') }}">
 </head>
 <body>
     <h1>Please Label the Following Video</h1>
@@ -16,16 +18,16 @@
             <input type="hidden" name="video_id" value="{{ videos[current_video_index].id }}">
             <input type="hidden" name="current_video_index" value="{{ current_video_index }}">
             <p>Are the labeled people strangers?</p>
-            <button type="submit" name="result" value=1>For Sure No</button>
-            <button type="submit" name="result" value=2>Likely no</button>
-            <button type="submit" name="result" value=3>Unsure</button>
-            <button type="submit" name="result" value=4>Likely yes</button>
-            <button type="submit" name="result" value=5>For Sure Yes</button>
+            <div class="button-container">
+                <button type="submit" name="result" value=1>For Sure No</button>
+                <button type="submit" name="result" value=2>Likely no</button>
+                <button type="submit" name="result" value=3>Unsure</button>
+                <button type="submit" name="result" value=4>Likely yes</button>
+                <button type="submit" name="result" value=5>For Sure Yes</button>
+            </div>
         </form>
     {% else %}
         <p>No videos available for review.</p>
     {% endif %}
 </body>
 </html>
-
- 

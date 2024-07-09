@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
     <h1>Welcome, {{ current_user.username }}!</h1>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <p> Ready to label 10 videos? <a href="{{ url_for('index') }}">Click here to begin!</a>.</p>
     <p> Each task in this survey will require you to watch one 5-second video clip. 
         Two people will be identified with boxes around them. 
         Your task is to identify whether those two people are strangers.
         Below are some examples.
     </p>
-    <h1>Strangers</h1>
+    <h3>Strangers</h3>
     <img src="static/gifs/Stranger_eg1.gif" alt="Example for Videos labelled strangers">
     <img src="static/gifs/Stranger_eg2.gif" alt="Example for Videos labelled strangers">
     <img src="static/gifs/Stranger_eg3.gif" alt="Example for Videos labelled strangers">
-    <h1>NOT Strangers</h1>
+    <h3>NOT Strangers</h3>
     <img src="static/gifs/No_stranger_eg1.gif" alt="Example for Videos labelled not strangers">
     <img src="static/gifs/No_stranger_eg2.gif" alt="Example for Videos labelled not strangers">
     <img src="static/gifs/No_stranger_eg3.gif" alt="Example for Videos labelled not strangers">
-    <a href="{{ url_for('index') }}">Ready to label 10 videos? Click here to begin!</a>
+    <p> Click here to <a href="{{ url_for('logout') }}">Logout</a>.</p>
 </body>
 </html>
