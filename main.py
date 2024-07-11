@@ -8,8 +8,6 @@ from models import db, User, Video, Label
 from config import Config
 from flask_migrate import Migrate
 from sqlalchemy.sql import func
-import random
-import cv2
 
 
 
@@ -64,113 +62,6 @@ def logout():
 @login_required
 def home():
     return render_template('home.html')
-
-# @app.route('/index')
-# @login_required
-# def index():
-#     labeled_videos = Label.query.filter_by(user_id=current_user.id).all()
-#     la/home/xb5/label_app/templatesbeled_video_ids = [label.video_id for label in labeled_videos]
-#     # videos = Video.query.filter(~Video.id.in_(labeled_video_ids)).limit(10).all()
-#     videos = Video.query.filter(~Video.id.in_(labeled_video_ids)).order_by(func.random()).limit(10).all()
-#     return render_template('index.html', videos=videos)
-
-# @app.route('/label/<int:video_id>', methods=['POST'])
-# @login_required
-# def label(video_id):
-#     label = request.form['label']
-#     new_label = Label(user_id=current_user.id, video_id=video_id, label=label)
-#     db.session.add(new_label)
-#     db.session.commit()
-#     return redirect(url_for('index'))
-
-def draw_boxes(img,box1,box2,label1,label2):
-    box_color = (0, 255, 0)  # Green color
-    box_thickness = 2
-
-    if box1 != []:
-      c1, c2 = (int(box1[0]), int(box1[1])), (int(box1[0]+box1[2]), int(box1[1]+box1[3]))
-      cv2.rectangle(img, c1, c2, box_color, box_thickness)
-      cv2.putText(img, label1, (c1[0], c1[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, box_color, 2)
-
-    if box2 != []:
-      c1, c2 = (int(box2[0]), int(box2[1])), (int(box2[0]+box2[2]), int(box2[1]+box2[3]))
-      cv2.rectangle(img, c1, c2, box_color, box_thickness)
-      cv2.putText(img, label2, (c1[0], c1[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, box_color, 2)
-
-def generate_frames(video_path, file_path, target_1, target_2):
-    cap = cv2.VideoCapture(video_path)
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    data_dict = {}
-    try:
-        with open(file_path, 'r') as file:
-            for line in file:
-                # Assuming the format is {frame},{id},{x1},{y1},{w},{h},{s},-1,-1,-1
-                parts = line.strip().split(',')
-
-                # Extracting values
-                frame = int(parts[0])
-                id = int(parts[1])
-                box = [float(part) for part in parts[2:6]]
-                # if id in count.keys():
-                # count[id] += 1
-                # else:
-                # count[id] = 1
-
-                # Creating dictionary entry
-                if frame in data_dict.keys():
-                    data_dict[frame][id] = box
-                else:
-                    data_dict[frame] = {id:box}
-
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-    current_frame = 1
-    while cap.isOpened() and current_frame <= 150:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        # Draw bounding boxes for each frame
-        for frameNum, info in data_dict.items():
-            if frameNum == current_frame:
-                box1 = info.get(int(target_1), [])
-                box2 = info.get(int(target_2), [])
-                # print(box1,box2)
-                draw_boxes(frame, box1, box2, str(target_1), str(target_2))
-                break
-
-        # Encode the frame in JPEG format
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-
-        # Yield the frame in byte format
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-        current_frame += 1
-
-    cap.release()
-
-@app.route('/video_feed')
-def video_feed():
-    # Example video path and data_dict for demonstration purposes
-    # video_path = '/home/xb5/label_app/static/Amsterdam_0.mp4'
-    # file_path = '/home/xb5/label_app/static/Amsterdam_0.txt'
-    # target_1 = 12
-    # target_2 = 13
-
-    video_path = request.args.get('video_path')
-    file_path = request.args.get('file_path')
-    target_1 = request.args.get('target_1')
-    target_2 = request.args.get('target_2')
-
-    return Response(generate_frames(video_path, file_path, target_1, target_2),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/index')
 @login_required
