@@ -69,7 +69,7 @@ def home():
 # @login_required
 # def index():
 #     labeled_videos = Label.query.filter_by(user_id=current_user.id).all()
-#     labeled_video_ids = [label.video_id for label in labeled_videos]
+#     la/home/xb5/label_app/templatesbeled_video_ids = [label.video_id for label in labeled_videos]
 #     # videos = Video.query.filter(~Video.id.in_(labeled_video_ids)).limit(10).all()
 #     videos = Video.query.filter(~Video.id.in_(labeled_video_ids)).order_by(func.random()).limit(10).all()
 #     return render_template('index.html', videos=videos)
@@ -201,4 +201,4 @@ def submit_result():
         return render_template('finish.html')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
