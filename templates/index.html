@@ -11,8 +11,8 @@
     {% if videos %}
         <p>Reviewing video {{ current_video_index + 1 }} of 10</p>
         <video id="video" controls>
-            <source src="{{ url_for('static', filename= videos[current_video_index].videoname + '__'+ videos[current_video_index].human1|string + '_' + videos[current_video_index].human2|string +'.mp4') }}" type="video/mp4">
-            <!-- <source src="{{ url_for('static', filename= videos[current_video_index].videoname +'.mp4') }}" type="video/mp4"> -->
+            <source src="{{ url_for('static', filename= 'videos/' + videos[current_video_index].videoname + '__'+ videos[current_video_index].human1|string + '_' + videos[current_video_index].human2|string +'.mp4') }}" type="video/mp4">
+            <!-- <source src="{{ url_for('static', filename= 'videos/Melbourne_6__2_10.mp4') }}" type="video/mp4"> -->
         </video>
         <form action="{{ url_for('submit_result') }}" method="post">
             <input type="hidden" name="video_id" value="{{ videos[current_video_index].id }}">
