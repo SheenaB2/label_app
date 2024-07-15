@@ -8,11 +8,17 @@ from models import db, User, Video, Label
 from config import Config
 from flask_migrate import Migrate
 from sqlalchemy.sql import func
+from flask_cors import CORS
+import os
+from dotenv import load_dotenv
 
 
 
 app = Flask(__name__)
+CORS(app)
+# app.config['DEBUG'] = os.environ.get('FLASK_DEBUG')
 app.config.from_object(Config)
+
 db.init_app(app)
 migrate = Migrate(app, db)
 
